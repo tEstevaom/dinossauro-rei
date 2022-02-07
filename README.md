@@ -1,2 +1,1 @@
-# dinossauro-rei
-.
+# Trex-Etapa-0.5
