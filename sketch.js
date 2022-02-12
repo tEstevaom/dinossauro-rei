@@ -22,8 +22,11 @@ var pontos = 0
 var somPonto
 var somMorte
 var barulhoDoPulo
-var click
-var fim
+var restart
+var fimDoJogo
+var restartimg
+var fimimg
+
 function preload(){
   trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
   groundImage = loadImage("ground2.png");
@@ -39,7 +42,8 @@ function preload(){
   somPonto = loadSound('checkpoint.mp3');
   somMorte = loadSound('die.mp3');
   barulhoDoPulo = loadSound('jump.mp3');
-
+  restartimg = loadImage ("restart.png");
+  fimimg = loadImage ("gameOver.png");
 
 }
 
@@ -58,10 +62,17 @@ function setup(){
   groupCactos = new Group();
   trex.setCollider("circle",0,0,30);
   
+  
   //trex.debug = true;
-  click = createSprite(300, 140, 40, 40);
-  fim = createSprite(300, 100, 40, 40);
+  restart = createSprite(300, 140, 40, 40);
+  restart.addImage (restartimg)
+  restart.scale = 0.5
+  restart.visible = false
 
+  fimDoJogo = createSprite(300, 100, 40, 40);
+  fimDoJogo.addImage (fimimg)
+  fimDoJogo.scale = 0.5
+  fimDoJogo.visible = false
 
 }
 
@@ -104,6 +115,11 @@ function draw(){
     groupCactos.setVelocityXEach (0);
     groupCactos.setLifetimeEach (-1);
     trex.velocityY = 0;
+    fimDoJogo.visible = true
+    restart.visible = true
+    if (mousePressedOver(restart)){
+     reset();
+    }
   }
   
 
@@ -114,7 +130,7 @@ function draw(){
 
 function controle(){
   if (keyDown( "space" ) && trex.y > 160) {
-  trex.velocityY = -15
+  trex.velocityY = -13
   barulhoDoPulo.play()
   }
 
@@ -174,5 +190,16 @@ function nascimentodeplantas(){
 
   
 }
+
+}
+function reset(){
+  groupCactos.destroyEach();
+  grupoDeNuvem.destroyEach();
+  fimDoJogo.visible = false;
+  restart.visible = false;
+  pontos = 0;
+  chao.velocityX = -5;
+  trex.changeAnimation("qualquer coisa", trex_running);
+  estadoDoJogo = jogar;
 
 }
