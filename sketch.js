@@ -48,9 +48,9 @@ function preload(){
 }
 
 function setup(){
-  createCanvas(600,200);
-  trex = createSprite(40, 160, 40, 40);
-  chao = createSprite(300, 180, 600, 10);
+  createCanvas(windowWidth,windowHeight);
+  trex = createSprite(50, 160, 40, 40);
+  chao = createSprite(width-180, 180, 600, 10);
   chao.addImage (groundImage);
   trex.addAnimation("qualquer coisa", trex_running);
   trex.addAnimation("p", parado);
@@ -64,12 +64,12 @@ function setup(){
   
   
   //trex.debug = true;
-  restart = createSprite(300, 140, 40, 40);
+  restart = createSprite(width/2, 140, 40, 40);
   restart.addImage (restartimg)
   restart.scale = 0.5
   restart.visible = false
 
-  fimDoJogo = createSprite(300, 100, 40, 40);
+  fimDoJogo = createSprite(width/2, 100, 40, 40);
   fimDoJogo.addImage (fimimg)
   fimDoJogo.scale = 0.5
   fimDoJogo.visible = false
@@ -84,7 +84,7 @@ function draw(){
   text(mouseX + "," + mouseY,mouseX,mouseY);
   //console.log(trex.y);
   console.log(trex.y);
-  text(' Km Percorrido '+ pontos,485,25);
+  text(' Km Percorrido '+ pontos,width/2-55,25);
   
   if (estadoDoJogo == antesDeJogar){
     trex.changeAnimation ("p",parado);
@@ -99,7 +99,7 @@ function draw(){
     controle();
     previsaoDoTempo();
     nascimentodeplantas();
-    pontos = pontos + Math.round(frameRate()/60)
+    pontos = pontos + Math.round(frameRate()/40)
     if (groupCactos.isTouching(trex)){
       estadoDoJogo = gameover
       somMorte.play();
@@ -129,9 +129,10 @@ function draw(){
 }
 
 function controle(){
-  if (keyDown( "space" ) && trex.y > 160) {
+  if (touches.lenght> 0 || keyDown( "space" ) && trex.y > 160) {
   trex.velocityY = -13
   barulhoDoPulo.play()
+  touches=[]
   }
 
   trex.velocityY= trex.velocityY + 0.7
@@ -144,13 +145,15 @@ function controle(){
 function previsaoDoTempo (){
 
   if (frameCount % Math.round(random(80,200)) ==0){
-  var nuvem =createSprite(600,35 ,10,20)
+  var nuvem =createSprite(width,35 ,10,20)
   nuvem.y = Math.round (random(20,90));
   nuvem.addImage(nuvemimagem)
   nuvem.scale = 0.8
   nuvem.velocityX= -3
   grupoDeNuvem.add(nuvem);
-  nuvem.lifetime = 200;
+  nuvem.depth =trex.depth
+  nuvem.depth =nuvem.depth-1
+  nuvem.lifetime = 450;
   if (nuvem.isTouching(grupoDeNuvem)){
     nuvem.x = frameCount % Math.round(random(80,200)) ==0
 
@@ -161,7 +164,7 @@ function previsaoDoTempo (){
 }
 function nascimentodeplantas(){
   if (frameCount % Math.round(random(60,150)) ==0){
-  cactos= createSprite(600,170);
+  cactos= createSprite(width,170);
   cactos.velocityX = -(5+2*pontos/200);
   var rand = Math.round(random(1,6));
   cactos.lifetime = 300;
